@@ -13,7 +13,11 @@ public class RequestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         String[] permissions = PermissionLifeManager.getInstance().getPermissions();
         final PermissionCallback permissionCallback =
                 PermissionLifeManager.getInstance().getPermissionCallback();
@@ -42,6 +46,7 @@ public class RequestActivity extends AppCompatActivity {
             }
         });
     }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

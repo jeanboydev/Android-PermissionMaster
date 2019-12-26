@@ -12,7 +12,7 @@ public interface PermissionCallback {
     void onGranted();
 
     /**
-     * 授权被拒绝
+     * 权限被拒绝
      *
      * @param isNeverAsk 已选择不再询问
      */
