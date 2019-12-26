@@ -66,7 +66,8 @@ public class FloatView extends View {
 
                             @Override
                             public void onDenied(boolean isNeverAsk) {
-                                Log.e(FloatView.class.getSimpleName(), "======onGranted======");
+                                Log.e(FloatView.class.getSimpleName(), "======onDenied" +
+                                        "===isNeverAsk===" + isNeverAsk);
                             }
                         });
             }

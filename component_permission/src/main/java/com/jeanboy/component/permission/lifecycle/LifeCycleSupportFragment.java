@@ -1,26 +1,24 @@
 package com.jeanboy.component.permission.lifecycle;
 
-import android.annotation.SuppressLint;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 /**
  * @author caojianbo
  * @since 2019/12/3 15:54
  */
-public class LifeCycleFragment extends Fragment {
+public class LifeCycleSupportFragment extends Fragment {
 
     private LifeCycle lifeCycle;
 
-    public LifeCycleFragment() {
+    public LifeCycleSupportFragment() {
         this(new LifeCycle());
     }
 
-    @SuppressLint("ValidFragment")
-    public LifeCycleFragment(LifeCycle lifeCycle) {
+    public LifeCycleSupportFragment(LifeCycle lifeCycle) {
         this.lifeCycle = lifeCycle;
     }
 
@@ -37,49 +35,49 @@ public class LifeCycleFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lifeCycle.onCreate(getActivity());
+        lifeCycle.onCreate(getContext());
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        lifeCycle.onStart(getActivity());
+        lifeCycle.onStart(getContext());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        lifeCycle.onResume(getActivity());
+        lifeCycle.onResume(getContext());
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        lifeCycle.onPause(getActivity());
+        lifeCycle.onPause(getContext());
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        lifeCycle.onStop(getActivity());
+        lifeCycle.onStop(getContext());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        lifeCycle.onDestroy(getActivity());
+        lifeCycle.onDestroy(getContext());
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        lifeCycle.onDetach(getActivity());
+        lifeCycle.onDetach(getContext());
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        lifeCycle.onRequestPermissionsResult(getActivity(), requestCode, permissions, grantResults);
+        lifeCycle.onRequestPermissionsResult(getContext(), requestCode, permissions, grantResults);
     }
 }

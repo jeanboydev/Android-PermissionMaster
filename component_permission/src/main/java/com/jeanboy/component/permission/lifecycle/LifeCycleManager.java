@@ -1,14 +1,17 @@
 package com.jeanboy.component.permission.lifecycle;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.util.Log;
+import android.content.Intent;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.jeanboy.component.permission.ui.RequestActivity;
 
 /**
  * @author caojianbo
@@ -19,13 +22,25 @@ public abstract class LifeCycleManager implements LifeCycleListener {
     protected void bind(Context context) {
         if (context == null) {
             throw new IllegalArgumentException("You cannot start a load on a null Context");
-        } else if (!(context instanceof Application)) {
+        } else if (context instanceof Application) { // 悬浮窗请求权限
+            Intent intent = new Intent(context, RequestActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            context.startActivity(intent);
+        } else {
             if (context instanceof FragmentActivity) {
                 bind((FragmentActivity) context);
-            } else if (context instanceof ContextWrapper) {
+            } else if (context instanceof Activity) {
+                bind((Activity) context);
+            } else if (context instanceof ContextWrapper
+                    && ((ContextWrapper) context).getBaseContext().getApplicationContext() != null) {
                 bind(((ContextWrapper) context).getBaseContext());
             }
         }
+    }
+
+    private void bind(Activity activity) {
+        android.app.FragmentManager fragmentManager = activity.getFragmentManager();
+        fragmentGet(fragmentManager);
     }
 
     private void bind(FragmentActivity activity) {
@@ -34,9 +49,20 @@ public abstract class LifeCycleManager implements LifeCycleListener {
     }
 
     private void supportFragmentGet(FragmentManager fragmentManager) {
-        LifeCycleFragment current = new LifeCycleFragment();
+        LifeCycleSupportFragment current = new LifeCycleSupportFragment();
         Fragment ready = fragmentManager.findFragmentByTag(getTag());
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (ready != null) {
+            fragmentTransaction.remove(ready);
+        }
+        fragmentTransaction.add(current, getTag()).commitAllowingStateLoss();
+        current.getLifeCycle().addListener(this);
+    }
+
+    private void fragmentGet(android.app.FragmentManager fragmentManager) {
+        LifeCycleFragment current = new LifeCycleFragment();
+        android.app.Fragment ready = fragmentManager.findFragmentByTag(getTag());
+        android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (ready != null) {
             fragmentTransaction.remove(ready);
         }
@@ -48,48 +74,38 @@ public abstract class LifeCycleManager implements LifeCycleListener {
 
     @Override
     public void onAttach(Context context) {
-        Log.e(LifeCycleManager.class.getSimpleName(),"=======onAttach======");
     }
 
     @Override
     public void onCreate(Context context) {
-        Log.e(LifeCycleManager.class.getSimpleName(),"=======onCreate======");
     }
 
     @Override
     public void onStart(Context context) {
-        Log.e(LifeCycleManager.class.getSimpleName(),"=======onStart======");
     }
 
     @Override
     public void onResume(Context context) {
-        Log.e(LifeCycleManager.class.getSimpleName(),"=======onResume======");
     }
 
     @Override
     public void onPause(Context context) {
-        Log.e(LifeCycleManager.class.getSimpleName(),"=======onPause======");
     }
 
     @Override
     public void onStop(Context context) {
-        Log.e(LifeCycleManager.class.getSimpleName(),"=======onStop======");
     }
 
     @Override
     public void onDestroy(Context context) {
-        Log.e(LifeCycleManager.class.getSimpleName(),"=======onDestroy======");
     }
 
     @Override
     public void onDetach(Context context) {
-        Log.e(LifeCycleManager.class.getSimpleName(),"=======onDetach======");
     }
 
     @Override
     public void onRequestPermissionsResult(Context context, int requestCode, String[] permissions,
                                            int[] grantResults) {
-        Log.e(LifeCycleManager.class.getSimpleName(),"=======onRequestPermissionsResult======");
-
     }
 }

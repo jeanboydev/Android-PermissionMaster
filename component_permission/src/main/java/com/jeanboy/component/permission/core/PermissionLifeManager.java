@@ -40,9 +40,22 @@ public class PermissionLifeManager extends LifeCycleManager {
         return instance;
     }
 
+    public String[] getPermissions() {
+        return permissions;
+    }
+
+    public PermissionCallback getPermissionCallback() {
+        return permissionCallback;
+    }
+
+    public SettingsCallback getSettingsCallback() {
+        return settingsCallback;
+    }
+
     public void request(Context context, String[] permissions, PermissionCallback callback) {
         this.permissions = permissions;
         this.permissionCallback = callback;
+        settingsOpenedCount = 0;
         bind(context);
     }
 
@@ -50,6 +63,7 @@ public class PermissionLifeManager extends LifeCycleManager {
                         PermissionCallback permissionCallback) {
         this.settingsCallback = settingsCallback;
         this.permissionCallback = permissionCallback;
+        settingsOpenedCount = 0;
         bind(context);
     }
 

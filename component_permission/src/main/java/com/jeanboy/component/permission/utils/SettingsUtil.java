@@ -3,15 +3,8 @@ package com.jeanboy.component.permission.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.Build;
 import android.provider.Settings;
-
-import androidx.annotation.RequiresApi;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Objects;
 
 /**
  * @author caojianbo

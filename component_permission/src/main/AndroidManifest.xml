@@ -3,7 +3,11 @@
     package="com.jeanboy.component.permission">
 
     <application>
-        <activity android:name=".ui.RequestActivity"></activity>
+        <activity
+            android:name=".ui.RequestActivity"
+            android:configChanges="screenLayout|orientation|screenSize"
+            android:launchMode="singleInstance"
+            android:theme="@style/TranslucentNoAnimation" />
     </application>
 
 </manifest>

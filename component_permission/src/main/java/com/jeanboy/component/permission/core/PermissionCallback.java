@@ -6,7 +6,15 @@ package com.jeanboy.component.permission.core;
  */
 public interface PermissionCallback {
 
+    /**
+     * 已授权
+     */
     void onGranted();
 
+    /**
+     * 授权被拒绝
+     *
+     * @param isNeverAsk 已选择不再询问
+     */
     void onDenied(boolean isNeverAsk);
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TranslucentNoAnimation" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 标题 -->
+        <item name="windowNoTitle">true</item>
+        <!-- 标题栏 -->
+        <item name="windowActionBar">false</item>
+        <!-- 状态栏颜色 -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
+        <!-- 底部导航栏颜色 -->
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+<!--        <item name="android:windowTranslucentNavigation">true</item>-->
+        <!-- 窗口背景颜色 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 窗口背景是否半透明 -->
+        <item name="android:windowIsTranslucent">true</item>
+
+        <!-- 隐藏键盘 -->
+        <item name="android:configChanges">keyboardHidden</item>
+        <item name="android:windowSoftInputMode">stateHidden</item>
+
+        <!-- 窗口内容转换 -->
+        <item name="android:windowContentTransitions">false</item>
+
+        <!-- 无转场动画 -->
+        <item name="android:activityOpenEnterAnimation">@null</item>
+        <item name="android:activityOpenExitAnimation">@null</item>
+        <item name="android:activityCloseEnterAnimation">@null</item>
+        <item name="android:activityCloseExitAnimation">@null</item>
+
+        <item name="android:windowEnterTransition">@null</item>
+        <item name="android:windowExitTransition">@null</item>
+    </style>
+</resources>
