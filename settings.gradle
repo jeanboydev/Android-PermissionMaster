@@ -1,0 +1,2 @@
+include ':app', ':component_permission'
+rootProject.name='PermissionMaster'
