@@ -6,11 +6,10 @@ import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import com.jeanboy.component.permission.core.PermissionCallback;
-import com.jeanboy.component.permission.core.PermissionLifeManager;
-import com.jeanboy.component.permission.core.SettingsCallback;
-import com.jeanboy.component.permission.utils.OverlaysUtil;
-import com.jeanboy.component.permission.utils.SettingsUtil;
+import com.jeanboy.component.permission.core.Watcher;
+import com.jeanboy.component.permission.core.WatcherManager;
+import com.jeanboy.component.permission.core.Ranger;
+import com.jeanboy.component.permission.core.RangerFactory;
 
 /**
  * @author caojianbo
@@ -25,7 +24,7 @@ public class PermissionMaster {
      * @param permission
      * @return
      */
-    public static boolean isGranted(@NonNull Context context, String permission) {
+    public static boolean isGranted(@NonNull Context context, @NonNull String permission) {
         return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -34,42 +33,47 @@ public class PermissionMaster {
      *
      * @param context
      * @param permission
-     * @param callback
+     * @param watcher
      */
-    public static void request(Context context, String permission,
-                               PermissionCallback callback) {
+    public static void request(@NonNull Context context, @NonNull String permission,
+                               Watcher watcher) {
         if (isGranted(context, permission)) {
-            if (callback != null) {
-                callback.onGranted();
+            if (watcher != null) {
+                watcher.onGranted();
             }
             return;
         }
-        PermissionLifeManager.getInstance().request(context, new String[]{permission}, callback);
+        WatcherManager.getInstance().request(context, new String[]{permission}, watcher);
     }
 
+
     /**
-     * 请求悬浮窗权限
+     * 请求需要打开系统设置界面的权限
      *
      * @param context
-     * @param callback
+     * @param type
+     * @param watcher
      */
-    public static void requestOverlay(final Context context, PermissionCallback callback) {
-        if (OverlaysUtil.isCanDraw(context)) {
-            if (callback != null) {
-                callback.onGranted();
+    public static void request(@NonNull Context context, int type, Watcher watcher) {
+        Ranger ranger = RangerFactory.build(type);
+        request(context, ranger, watcher);
+    }
+
+
+    /**
+     * 请求需要打开系统设置界面的权限，自定义操作
+     *
+     * @param context
+     * @param ranger
+     * @param watcher
+     */
+    public static void request(@NonNull Context context, @NonNull Ranger ranger, Watcher watcher) {
+        if (ranger.isGranted(context)) {
+            if (watcher != null) {
+                watcher.onGranted();
             }
             return;
         }
-        PermissionLifeManager.getInstance().request(context, new SettingsCallback() {
-            @Override
-            public boolean isGranted() {
-                return OverlaysUtil.isCanDraw(context);
-            }
-
-            @Override
-            public void onAction() {
-                SettingsUtil.toOpenOverlaySettings(context);
-            }
-        }, callback);
+        WatcherManager.getInstance().request(context, ranger, watcher);
     }
 }

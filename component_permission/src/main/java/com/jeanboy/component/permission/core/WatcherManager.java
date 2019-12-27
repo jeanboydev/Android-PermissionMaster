@@ -17,23 +17,23 @@ import com.jeanboy.component.permission.lifecycle.LifeCycleManager;
  * @author caojianbo
  * @since 2019/12/3 15:58
  */
-public class PermissionLifeManager extends LifeCycleManager {
+public class WatcherManager extends LifeCycleManager {
 
     private String[] permissions;
-    private PermissionCallback permissionCallback;
-    private SettingsCallback settingsCallback;
+    private Watcher watcher;
+    private Ranger ranger;
     private int settingsOpenedCount = 0;
 
-    private static volatile PermissionLifeManager instance;
+    private static volatile WatcherManager instance;
 
-    private PermissionLifeManager() {
+    private WatcherManager() {
     }
 
-    public static PermissionLifeManager getInstance() {
+    public static WatcherManager getInstance() {
         if (instance == null) {
-            synchronized (PermissionLifeManager.class) {
+            synchronized (WatcherManager.class) {
                 if (instance == null) {
-                    instance = new PermissionLifeManager();
+                    instance = new WatcherManager();
                 }
             }
         }
@@ -44,25 +44,25 @@ public class PermissionLifeManager extends LifeCycleManager {
         return permissions;
     }
 
-    public PermissionCallback getPermissionCallback() {
-        return permissionCallback;
+    public Watcher getWatcher() {
+        return watcher;
     }
 
-    public SettingsCallback getSettingsCallback() {
-        return settingsCallback;
+    public Ranger getRanger() {
+        return ranger;
     }
 
-    public void request(Context context, String[] permissions, PermissionCallback callback) {
+    public void request(Context context, String[] permissions, Watcher watcher) {
         this.permissions = permissions;
-        this.permissionCallback = callback;
+        this.watcher = watcher;
         settingsOpenedCount = 0;
         bind(context);
     }
 
-    public void request(Context context, SettingsCallback settingsCallback,
-                        PermissionCallback permissionCallback) {
-        this.settingsCallback = settingsCallback;
-        this.permissionCallback = permissionCallback;
+    public void request(Context context, Ranger ranger,
+                        Watcher permissionCallback) {
+        this.ranger = ranger;
+        this.watcher = permissionCallback;
         settingsOpenedCount = 0;
         bind(context);
     }
@@ -89,20 +89,20 @@ public class PermissionLifeManager extends LifeCycleManager {
             permissions = null;
         }
 
-        if (settingsCallback != null) {
+        if (ranger != null) {
             if (settingsOpenedCount > 0) {
-                if (settingsCallback.isGranted()) {
-                    if (permissionCallback != null) {
-                        permissionCallback.onGranted();
+                if (ranger.isGranted(context)) {
+                    if (watcher != null) {
+                        watcher.onGranted();
                     }
                 } else {
-                    if (permissionCallback != null) {
-                        permissionCallback.onDenied(false);
+                    if (watcher != null) {
+                        watcher.onDenied(false);
                     }
                 }
             } else {
                 settingsOpenedCount++;
-                settingsCallback.onAction();
+                ranger.onAction(context);
             }
         }
     }
@@ -118,16 +118,16 @@ public class PermissionLifeManager extends LifeCycleManager {
                                            int[] grantResults) {
         if (Code.REQUEST != requestCode) return;
         if (grantResults.length == 0) {
-            if (permissionCallback != null) {
-                permissionCallback.onDenied(false);
+            if (watcher != null) {
+                watcher.onDenied(false);
             }
             return;
         }
 
         // TODO: 2019/12/26 目前只处理一个权限申请的情况
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            if (permissionCallback != null) {
-                permissionCallback.onGranted();
+            if (watcher != null) {
+                watcher.onGranted();
             }
             return;
         }
@@ -136,15 +136,15 @@ public class PermissionLifeManager extends LifeCycleManager {
             if (!ActivityCompat.shouldShowRequestPermissionRationale((Activity) context,
                     permissions[0])) {
                 // 用户点击了不再询问
-                if (permissionCallback != null) {
-                    permissionCallback.onDenied(true);
+                if (watcher != null) {
+                    watcher.onDenied(true);
                 }
                 return;
             }
         }
 
-        if (permissionCallback != null) {
-            permissionCallback.onDenied(false);
+        if (watcher != null) {
+            watcher.onDenied(false);
         }
     }
 }

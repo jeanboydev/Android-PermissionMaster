@@ -5,8 +5,8 @@ import android.view.KeyEvent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.jeanboy.component.permission.core.PermissionCallback;
-import com.jeanboy.component.permission.core.PermissionLifeManager;
+import com.jeanboy.component.permission.core.Watcher;
+import com.jeanboy.component.permission.core.WatcherManager;
 
 public class RequestActivity extends AppCompatActivity {
 
@@ -18,29 +18,29 @@ public class RequestActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String[] permissions = PermissionLifeManager.getInstance().getPermissions();
-        final PermissionCallback permissionCallback =
-                PermissionLifeManager.getInstance().getPermissionCallback();
+        String[] permissions = WatcherManager.getInstance().getPermissions();
+        final Watcher watcher =
+                WatcherManager.getInstance().getWatcher();
         if (permissions == null) {
-            if (permissionCallback != null) {
-                permissionCallback.onDenied(false);
+            if (watcher != null) {
+                watcher.onDenied(false);
             }
             RequestActivity.this.finish();
         }
 
-        PermissionLifeManager.getInstance().request(this, permissions, new PermissionCallback() {
+        WatcherManager.getInstance().request(this, permissions, new Watcher() {
             @Override
             public void onGranted() {
-                if (permissionCallback != null) {
-                    permissionCallback.onGranted();
+                if (watcher != null) {
+                    watcher.onGranted();
                 }
                 RequestActivity.this.finish();
             }
 
             @Override
             public void onDenied(boolean isNeverAsk) {
-                if (permissionCallback != null) {
-                    permissionCallback.onDenied(isNeverAsk);
+                if (watcher != null) {
+                    watcher.onDenied(isNeverAsk);
                 }
                 RequestActivity.this.finish();
             }

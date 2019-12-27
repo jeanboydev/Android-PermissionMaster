@@ -1,15 +1,16 @@
 package com.jeanboy.app.permissionmaster;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.jeanboy.app.permissionmaster.views.FloatView;
 import com.jeanboy.component.permission.PermissionMaster;
-import com.jeanboy.component.permission.core.PermissionCallback;
+import com.jeanboy.component.permission.constants.Type;
+import com.jeanboy.component.permission.core.Watcher;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void toRequestLocationPermission(View view) {
         PermissionMaster.request(this, Manifest.permission.ACCESS_FINE_LOCATION,
-                new PermissionCallback() {
+                new Watcher() {
                     @Override
                     public void onGranted() {
                         Log.e(MainActivity.class.getSimpleName(), "======onGranted======");
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toRequestOverlaysPermission(View view) {
-        PermissionMaster.requestOverlay(this, new PermissionCallback() {
+        PermissionMaster.request(this, Type.OVERLAYS, new Watcher() {
             @Override
             public void onGranted() {
                 Log.e(MainActivity.class.getSimpleName(), "======onGranted======");

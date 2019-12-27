@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import com.jeanboy.app.permissionmaster.R;
 import com.jeanboy.app.permissionmaster.utils.ScreenUtil;
 import com.jeanboy.component.permission.PermissionMaster;
-import com.jeanboy.component.permission.core.PermissionCallback;
+import com.jeanboy.component.permission.core.Watcher;
 import com.jeanboy.component.permission.utils.OverlaysUtil;
 
 /**
@@ -58,7 +58,7 @@ public class FloatView extends View {
             public void onClick(View v) {
                 Log.e(FloatView.class.getSimpleName(), "=====onClick=====");
                 PermissionMaster.request(getContext(), Manifest.permission.ACCESS_FINE_LOCATION,
-                        new PermissionCallback() {
+                        new Watcher() {
                             @Override
                             public void onGranted() {
                                 Log.e(FloatView.class.getSimpleName(), "======onGranted======");

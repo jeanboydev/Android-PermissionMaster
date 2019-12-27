@@ -4,7 +4,7 @@ package com.jeanboy.component.permission.core;
  * @author caojianbo
  * @since 2019/12/3 15:02
  */
-public interface PermissionCallback {
+public interface Watcher {
 
     /**
      * 已授权
