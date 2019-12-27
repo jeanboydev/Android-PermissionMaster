@@ -22,7 +22,7 @@ public class WatcherManager extends LifeCycleManager {
     private String[] permissions;
     private Watcher watcher;
     private Ranger ranger;
-    private int settingsOpenedCount = 0;
+    private int actionCount = 0;
 
     private static volatile WatcherManager instance;
 
@@ -55,7 +55,7 @@ public class WatcherManager extends LifeCycleManager {
     public void request(Context context, String[] permissions, Watcher watcher) {
         this.permissions = permissions;
         this.watcher = watcher;
-        settingsOpenedCount = 0;
+        actionCount = 0;
         bind(context);
     }
 
@@ -63,7 +63,7 @@ public class WatcherManager extends LifeCycleManager {
                         Watcher permissionCallback) {
         this.ranger = ranger;
         this.watcher = permissionCallback;
-        settingsOpenedCount = 0;
+        actionCount = 0;
         bind(context);
     }
 
@@ -90,7 +90,7 @@ public class WatcherManager extends LifeCycleManager {
         }
 
         if (ranger != null) {
-            if (settingsOpenedCount > 0) {
+            if (actionCount > 0) {
                 if (ranger.isGranted(context)) {
                     if (watcher != null) {
                         watcher.onGranted();
@@ -101,7 +101,7 @@ public class WatcherManager extends LifeCycleManager {
                     }
                 }
             } else {
-                settingsOpenedCount++;
+                actionCount++;
                 ranger.onAction(context);
             }
         }
@@ -110,7 +110,7 @@ public class WatcherManager extends LifeCycleManager {
     @Override
     public void onDestroy(Context context) {
         super.onDestroy(context);
-        settingsOpenedCount = 0;
+        actionCount = 0;
     }
 
     @Override

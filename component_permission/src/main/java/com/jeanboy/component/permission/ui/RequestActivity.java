@@ -34,7 +34,12 @@ public class RequestActivity extends AppCompatActivity {
                 if (watcher != null) {
                     watcher.onGranted();
                 }
-                RequestActivity.this.finish();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RequestActivity.this.finish();
+                    }
+                });
             }
 
             @Override
@@ -42,7 +47,12 @@ public class RequestActivity extends AppCompatActivity {
                 if (watcher != null) {
                     watcher.onDenied(isNeverAsk);
                 }
-                RequestActivity.this.finish();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RequestActivity.this.finish();
+                    }
+                });
             }
         });
     }
